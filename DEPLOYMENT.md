@@ -33,20 +33,15 @@ This guide provides full steps to deploy your application, safeguard your enviro
 3. Create a Database User and save the password.
 4. Get your connection string: `mongodb+srv://<user>:<password>@cluster.mongodb.net/monthly-burn`.
 
-### Step B: Backend (e.g., Render or Railway)
+### Step B: Unified Deployment (e.g., Render)
 1. Connect your GitHub repository.
-2. Set **Root Directory** to `backend`.
-3. Set **Build Command** to `npm install`.
+2. Set **Root Directory** to `.` (the project root).
+3. Set **Build Command** to `npm run build`.
 4. Set **Start Command** to `npm start`.
-5. **CRITICAL:** Go to Environment Variables and add all variables listed in the table above.
+5. **CRITICAL:** Go to Environment Variables and add all backend variables listed in the table above, PLUS `VITE_GOOGLE_CLIENT_ID` and `VITE_API_URL` (which should point to your backend URL + `/api`).
 
-### Step C: Frontend (e.g., Vercel)
-1. Connect your GitHub repository.
-2. Set **Root Directory** to `frontend`.
-3. Framework Preset: **Vite**.
-4. Set **Build Command** to `npm run build`.
-5. Set **Output Directory** to `dist`.
-6. **CRITICAL:** Add `VITE_GOOGLE_CLIENT_ID` and `VITE_API_URL` in the Vercel dashboard.
+> [!NOTE]
+> Since we are now serving the frontend from the backend, you only need one Render service!
 
 ---
 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 
 
 const app = express();
@@ -54,10 +55,10 @@ app.use('/api/expenses', auth, require('./routes/expenses'));
 app.use('/api/subscriptions', auth, require('./routes/subscriptions'));
 app.use('/api/analytics', auth, require('./routes/analytics'));
 
-// app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
-// app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "..", "frontend", "dist", "index.html"));
-// })
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "..", "frontend", "dist", "index.html"));
+})
 
 app.get('/', (req, res) => {
     res.send('Know Your Monthly Burn API is running...');
