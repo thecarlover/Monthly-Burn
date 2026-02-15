@@ -107,7 +107,7 @@ const auth = async (req, res, next) => {
         }
 
         // DEVELOPMENT ONLY: Allow mock_token for demo
-        if (token === 'mock_token') {
+        if (token === 'mock_token' && process.env.NODE_ENV !== 'production') {
             let user = await User.findOne({ email: 'demo@example.com' });
             if (!user) {
                 user = new User({
