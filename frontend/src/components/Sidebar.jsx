@@ -38,8 +38,8 @@ const Sidebar = () => {
             {/* Desktop Sidebar */}
             <div className="hidden md:flex w-64 h-screen bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex-col p-6 fixed z-50">
                 <Link to="/" className="flex items-center gap-3 mb-10 group">
-                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <span className="text-white font-bold text-xl">B</span>
+                    <div className="w-10 h-10 group-hover:scale-110 transition-transform">
+                        <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
                     </div>
                     <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent dark:from-sky-400 dark:to-blue-500">
                         Monthly Burn

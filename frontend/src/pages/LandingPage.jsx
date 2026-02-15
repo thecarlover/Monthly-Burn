@@ -71,7 +71,9 @@ const LandingPage = () => {
             {/* Minimal Navbar */}
             <nav className="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center relative z-20">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-primary/20 rotate-3">M</div>
+                    <div className="w-10 h-10">
+                        <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    </div>
                     <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500">Monthly Burn</span>
                 </div>
             </nav>

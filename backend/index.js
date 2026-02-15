@@ -8,7 +8,8 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Security Middlewares
+// Base Security
+app.disable('x-powered-by'); // Hide that we use Express
 app.use(helmet()); // Sets various HTTP headers for security
 
 const limiter = rateLimit({
