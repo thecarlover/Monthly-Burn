@@ -1,12 +1,14 @@
-require('dotenv').config();
+const dotenv = require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
+
 const app = express();
 const PORT = process.env.PORT || 5001;
+
 
 // Base Security
 app.disable('x-powered-by'); // Hide that we use Express
@@ -24,8 +26,17 @@ const limiter = rateLimit({
 app.use('/api/', limiter); // Apply rate limiting to all API routes
 
 // Middleware
+const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:5173'];
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
     credentials: true
 }));
 app.use(express.json());
@@ -43,9 +54,15 @@ app.use('/api/expenses', auth, require('./routes/expenses'));
 app.use('/api/subscriptions', auth, require('./routes/subscriptions'));
 app.use('/api/analytics', auth, require('./routes/analytics'));
 
+// app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+// app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "..", "frontend", "dist", "index.html"));
+// })
+
 app.get('/', (req, res) => {
     res.send('Know Your Monthly Burn API is running...');
 });
+
 
 // Start Server
 app.listen(PORT, () => {
