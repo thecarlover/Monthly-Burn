@@ -11,6 +11,10 @@ const PORT = process.env.PORT || 5001;
 // Base Security
 app.disable('x-powered-by'); // Hide that we use Express
 app.use(helmet()); // Sets various HTTP headers for security
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

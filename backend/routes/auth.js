@@ -133,7 +133,8 @@ const auth = async (req, res, next) => {
         req.token = token;
         next();
     } catch (e) {
-        res.status(401).send({ error: 'Please authenticate.' });
+        console.error('Authentication error:', e.message || 'User not found in database');
+        res.status(401).send({ error: e.message || 'Please authenticate.' });
     }
 };
 
