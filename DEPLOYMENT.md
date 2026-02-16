@@ -1,12 +1,8 @@
 # 🚀 Monthly Burn Deployment Guide
-
 This guide provides full steps to deploy your application, safeguard your environment variables, and manage production changes.
-
 ## 1. Environment Variables Safeguarding
-
 > [!IMPORTANT]
 > **NEVER** commit your `.env` files to git. They are already in `.gitignore`, but ensure they stay that way.
-
 ### Backend Variables (`backend/.env`)
 | Variable | Description | Production Value Example |
 | :--- | :--- | :--- |
@@ -16,41 +12,32 @@ This guide provides full steps to deploy your application, safeguard your enviro
 | `JWT_SECRET` | A long, random string for signing tokens. | *Generate a random 64-char string* |
 | `CORS_ORIGIN` | The URL of your deployed frontend. | `https://monthly-burn.vercel.app` |
 | `NODE_ENV` | Set to `production` to enable security features. | `production` |
-
 ### Frontend Variables (`frontend/.env`)
 | Variable | Description | Production Value Example |
 | :--- | :--- | :--- |
 | `VITE_GOOGLE_CLIENT_ID` | Same as backend Client ID. | `12345-abcde.apps.googleusercontent.com` |
 | `VITE_API_URL` | The URL of your deployed backend. | `https://monthly-burn-api.onrender.com/api` |
-
 ---
-
 ## 2. Step-by-Step Deployment
-
 ### Step A: Database (MongoDB Atlas)
 1. Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
 2. Under "Network Access", add `0.0.0.0/0` (or specific IPs of your host).
 3. Create a Database User and save the password.
 4. Get your connection string: `mongodb+srv://<user>:<password>@cluster.mongodb.net/monthly-burn`.
-
 ### Step B: Unified Deployment (e.g., Render)
 1. Connect your GitHub repository.
 2. Set **Root Directory** to `.` (the project root).
 3. Set **Build Command** to `npm run build`.
 4. Set **Start Command** to `npm start`.
 5. **CRITICAL:** Go to Environment Variables and add all backend variables listed in the table above, PLUS `VITE_GOOGLE_CLIENT_ID` and `VITE_API_URL` (which should point to your backend URL + `/api`).
-
 > [!NOTE]
 > Since we are now serving the frontend from the backend, you only need one Render service!
-
 ---
-
 ## 3. Security Checklist
 - [x] **CORS set?** Ensure `CORS_ORIGIN` in backend points to your Vercel URL.
 - [x] **Mock Token disabled?** Setting `NODE_ENV=production` automatically disables the demo mock token.
 - [x] **Rate Limiting?** Backend now limits to 100 requests every 15 mins per IP.
 - [x] **Helmet?** Protection headers are automatically added.
-
 ## 4. How to Update
 If you change code:
 1. Push to GitHub.

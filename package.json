@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "install-all": "npm install && npm install --prefix backend && npm install --prefix frontend",
+        "clean-build": "rm -rf frontend/dist && npm run build",
         "build": "npm run install-all && npm run build --prefix frontend",
         "start": "node backend/index.js"
     }
