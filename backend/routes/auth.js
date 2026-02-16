@@ -157,7 +157,7 @@ router.get('/profile', auth, async (req, res) => {
 // Update Profile
 router.patch('/profile', auth, async (req, res) => {
     const updates = Object.keys(req.body);
-    const allowedUpdates = ['displayName', 'monthlyIncome', 'currency', 'notificationsEnabled', 'email', 'salaryCreditDate'];
+    const allowedUpdates = ['displayName', 'monthlyIncome', 'currency', 'notificationsEnabled', 'email', 'salaryCreditDate', 'salaryMode'];
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidOperation) {

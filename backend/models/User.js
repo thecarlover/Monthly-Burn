@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
         type: { type: String, enum: ['Essential', 'Non-Essential'], required: true },
         iconName: { type: String, default: 'Zap' }
     }],
+    salaryMode: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now },
 });
 
