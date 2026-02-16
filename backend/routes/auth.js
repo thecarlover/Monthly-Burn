@@ -8,6 +8,17 @@ const bcrypt = require('bcryptjs');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_for_production';
 
+// Public: Get total user count
+router.get('/users/count', async (req, res) => {
+    try {
+        const count = await User.countDocuments();
+        res.json({ count });
+    } catch (error) {
+        console.error('Error fetching user count:', error);
+        res.status(500).json({ message: 'Error fetching user count' });
+    }
+});
+
 // Google Login / Register
 router.post('/google', async (req, res) => {
     const { idToken } = req.body;

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Zap, BarChart3, ArrowRight, Play, Loader2, AlertCircle, Mail, Lock, User, CheckCircle2 } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
-import { loginWithGoogle, login, register } from '../services/api';
+import { loginWithGoogle, login, register, getUserCount } from '../services/api';
 
 const LandingPage = () => {
     const navigate = useNavigate();
@@ -15,6 +15,19 @@ const LandingPage = () => {
         displayName: ''
     });
     const [error, setError] = useState('');
+    const [userCount, setUserCount] = useState(0);
+
+    useEffect(() => {
+        const fetchUserCount = async () => {
+            try {
+                const data = await getUserCount();
+                setUserCount(data.count);
+            } catch (err) {
+                console.error('Error fetching user count:', err);
+            }
+        };
+        fetchUserCount();
+    }, []);
 
     const isGoogleConfigured = import.meta.env.VITE_GOOGLE_CLIENT_ID && !import.meta.env.VITE_GOOGLE_CLIENT_ID.includes('your_real');
 
@@ -107,6 +120,22 @@ const LandingPage = () => {
                         >
                             The ultimate dashboard to track your monthly burn, identify leaks, and master your subscriptions.
                         </motion.p>
+
+                        {userCount > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3 }}
+                                className="flex items-center gap-2 text-slate-400 font-bold text-sm bg-white/50 w-fit px-4 py-2 rounded-full border border-slate-100"
+                            >
+                                <span className="flex -space-x-2">
+                                    {[1, 2, 3].map(i => (
+                                        <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-slate-200" />
+                                    ))}
+                                </span>
+                                <span>Join {userCount}+ users mastering their burn</span>
+                            </motion.div>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-6 pb-4">

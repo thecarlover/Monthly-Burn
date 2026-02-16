@@ -122,4 +122,9 @@ export const addCustomCategory = async (categoryData) => {
     return response.data;
 };
 
+export const getUserCount = async () => {
+    const response = await api.get('/auth/users/count');
+    return response.data;
+};
+
 export default api;
