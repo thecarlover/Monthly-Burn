@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, PieChart, Lightbulb, Bell, Settings, LogOut, Sun, Moon, Clock } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, PieChart, Lightbulb, Bell, Settings, LogOut, Sun, Moon, Clock, MoreHorizontal, X, Download } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Sidebar = () => {
     const navigate = useNavigate();
     const [darkMode, setDarkMode] = useState(() => {
         return localStorage.getItem('darkMode') === 'true';
     });
+    const [showMobileMore, setShowMobileMore] = useState(false);
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    }, []);
 
     useEffect(() => {
         if (darkMode) {
@@ -31,6 +43,15 @@ const Sidebar = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         navigate('/');
+    };
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            setDeferredPrompt(null);
+        }
     };
 
     return (
@@ -84,7 +105,7 @@ const Sidebar = () => {
 
             {/* Mobile Bottom Navigation */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50">
-                {navItems.slice(0, 5).map((item) => (
+                {navItems.slice(0, 4).map((item) => (
                     <NavLink
                         key={item.path}
                         to={item.path}
@@ -95,11 +116,103 @@ const Sidebar = () => {
                             }`
                         }
                     >
-                        <item.icon size={24} />
+                        <item.icon size={22} />
                         <span className="text-[10px] font-bold uppercase tracking-tighter">{item.label.split(' ')[0]}</span>
                     </NavLink>
                 ))}
+                <button
+                    onClick={() => setShowMobileMore(true)}
+                    className={`flex flex-col items-center gap-1 transition-all ${showMobileMore ? 'text-primary dark:text-sky-400' : 'text-slate-400'}`}
+                >
+                    <MoreHorizontal size={22} />
+                    <span className="text-[10px] font-bold uppercase tracking-tighter">More</span>
+                </button>
             </div>
+
+            {/* Mobile More Overlay */}
+            <AnimatePresence>
+                {showMobileMore && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowMobileMore(false)}
+                            className="md:hidden fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[60]"
+                        />
+                        <motion.div
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 rounded-t-[32px] p-8 z-[70] border-t border-slate-100 dark:border-slate-800 shadow-2xl"
+                        >
+                            <div className="flex justify-between items-center mb-8">
+                                <h2 className="text-xl font-bold dark:text-white">Menu</h2>
+                                <button
+                                    onClick={() => setShowMobileMore(false)}
+                                    className="p-2 bg-slate-50 dark:bg-slate-800 rounded-full text-slate-500"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-3">
+                                <Link
+                                    to="/settings"
+                                    onClick={() => setShowMobileMore(false)}
+                                    className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-slate-700 dark:text-slate-200"
+                                >
+                                    <div className="p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                                        <Settings size={20} />
+                                    </div>
+                                    <span className="font-semibold">Settings</span>
+                                </Link>
+
+                                <button
+                                    onClick={() => {
+                                        setDarkMode(!darkMode);
+                                        setShowMobileMore(false);
+                                    }}
+                                    className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-slate-700 dark:text-slate-200"
+                                >
+                                    <div className="p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                                        {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+                                    </div>
+                                    <span className="font-semibold">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                                </button>
+
+                                {deferredPrompt && (
+                                    <button
+                                        onClick={() => {
+                                            handleInstallClick();
+                                            setShowMobileMore(false);
+                                        }}
+                                        className="flex items-center gap-4 p-4 bg-primary/10 rounded-2xl text-primary dark:text-sky-400"
+                                    >
+                                        <div className="p-2 bg-primary text-white rounded-xl shadow-md">
+                                            <Download size={20} />
+                                        </div>
+                                        <span className="font-bold">Add to Home Screen</span>
+                                    </button>
+                                )}
+
+                                <div className="h-px bg-slate-100 dark:bg-slate-800 my-2" />
+
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-4 p-4 bg-red-50 dark:bg-red-900/10 rounded-2xl text-red-500"
+                                >
+                                    <div className="p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                                        <LogOut size={20} />
+                                    </div>
+                                    <span className="font-semibold">Logout</span>
+                                </button>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </>
     );
 };
