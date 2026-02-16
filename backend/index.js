@@ -17,7 +17,7 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-            "connect-src": ["'self'", "http://localhost:5001", "http://localhost:5005"],
+            "connect-src": ["'self'", "http://localhost:5001", "http://localhost:5005", "https://monthly-burn.onrender.com"],
         },
     },
 })); // Sets various HTTP headers for security
@@ -34,7 +34,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter); // Apply rate limiting to all API routes
 
 // Middleware
-const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:5173', 'http://localhost:5005'];
+const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:5173', 'http://localhost:5005', 'https://monthly-burn.onrender.com'];
 app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin (like mobile apps or curl requests)

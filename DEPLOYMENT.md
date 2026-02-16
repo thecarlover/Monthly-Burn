@@ -10,13 +10,13 @@ This guide provides full steps to deploy your application, safeguard your enviro
 | `MONGODB_URI` | Connection string for MongoDB. | `mongodb+srv://...` (MongoDB Atlas) |
 | `GOOGLE_CLIENT_ID` | OAuth2 Client ID from Google Console. | `12345-abcde.apps.googleusercontent.com` |
 | `JWT_SECRET` | A long, random string for signing tokens. | *Generate a random 64-char string* |
-| `CORS_ORIGIN` | The URL of your deployed frontend. | `https://monthly-burn.vercel.app` |
+| `CORS_ORIGIN` | The URL of your deployed frontend. | `https://monthly-burn.onrender.com` |
 | `NODE_ENV` | Set to `production` to enable security features. | `production` |
 ### Frontend Variables (`frontend/.env`)
 | Variable | Description | Production Value Example |
 | :--- | :--- | :--- |
 | `VITE_GOOGLE_CLIENT_ID` | Same as backend Client ID. | `12345-abcde.apps.googleusercontent.com` |
-| `VITE_API_URL` | The URL of your deployed backend. | `https://monthly-burn-api.onrender.com/api` |
+| `VITE_API_URL` | The URL of your deployed backend. | `https://monthly-burn.onrender.com/api` |
 ---
 ## 2. Step-by-Step Deployment
 ### Step A: Database (MongoDB Atlas)
@@ -29,12 +29,12 @@ This guide provides full steps to deploy your application, safeguard your enviro
 2. Set **Root Directory** to `.` (the project root).
 3. Set **Build Command** to `npm run build`.
 4. Set **Start Command** to `npm start`.
-5. **CRITICAL:** Go to Environment Variables and add all backend variables listed in the table above, PLUS `VITE_GOOGLE_CLIENT_ID` and `VITE_API_URL` (which should point to your backend URL + `/api`).
+5. **CRITICAL:** Go to Environment Variables and add all backend variables listed in the table above, PLUS `VITE_GOOGLE_CLIENT_ID` and `VITE_API_URL` (which should point to `https://monthly-burn.onrender.com/api`).
 > [!NOTE]
 > Since we are now serving the frontend from the backend, you only need one Render service!
 ---
 ## 3. Security Checklist
-- [x] **CORS set?** Ensure `CORS_ORIGIN` in backend points to your Vercel URL.
+- [x] **CORS set?** Ensure `CORS_ORIGIN` in backend points to your production URL.
 - [x] **Mock Token disabled?** Setting `NODE_ENV=production` automatically disables the demo mock token.
 - [x] **Rate Limiting?** Backend now limits to 100 requests every 15 mins per IP.
 - [x] **Helmet?** Protection headers are automatically added.
