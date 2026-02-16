@@ -251,26 +251,26 @@ const Transactions = () => {
             </AnimatePresence>
 
             <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div>
-                    <h1 className="text-4xl font-bold tracking-tight">Transaction History</h1>
+                <div className="w-full md:w-auto text-left">
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Transaction History</h1>
                     <p className="text-slate-500 mt-1 font-medium italic font-serif">Deep audit of your monthly burn.</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                     <button
                         onClick={(e) => openResetConfirm(e)}
-                        className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-bold hover:bg-red-100 transition-all border border-red-100"
+                        className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl text-sm font-bold hover:bg-red-100 transition-all border border-red-100"
                     >
-                        <RefreshCcw size={18} /> Reset Data
+                        <RefreshCcw size={18} /> Reset
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all shadow-sm">
+                    <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all shadow-sm">
                         <Download size={18} /> Export
                     </button>
-                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 w-full md:w-auto overflow-x-auto no-scrollbar">
                         {['daily', 'weekly', 'monthly', 'all'].map((p) => (
                             <button
                                 key={p}
                                 onClick={() => setPeriod(p)}
-                                className={`px-4 py-1.5 rounded-lg text-xs font-heavy capitalize transition-all ${period === p ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'}`}
+                                className={`flex-1 min-w-[70px] md:min-w-0 px-4 py-2 rounded-lg text-xs font-heavy capitalize transition-all ${period === p ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'}`}
                             >
                                 {p}
                             </button>
@@ -333,34 +333,36 @@ const Transactions = () => {
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: idx * 0.05 }}
-                                        className="card flex items-center justify-between group hover:shadow-lg transition-all"
+                                        className="card flex flex-col md:flex-row md:items-center justify-between group hover:shadow-lg transition-all gap-4 md:gap-0"
                                     >
                                         <div className="flex items-center gap-4 uppercase font-bold text-lg">
-                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${exp.category === 'Essential' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                            <div className={`w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center ${exp.category === 'Essential' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
                                                 {exp.category === 'Essential' ? <ArrowDownRight size={24} /> : <ArrowUpRight size={24} />}
                                             </div>
-                                            <div>
-                                                <h4 className="text-slate-800 dark:text-slate-100">{exp.subcategory}</h4>
-                                                <p className="text-sm text-slate-400 font-medium normal-case font-serif italic">{exp.description || 'No description'}</p>
+                                            <div className="min-w-0 pr-4">
+                                                <h4 className="text-slate-800 dark:text-slate-100 truncate md:whitespace-normal">{exp.subcategory}</h4>
+                                                <p className="text-sm text-slate-400 font-medium normal-case font-serif italic truncate md:whitespace-normal">{exp.description || 'No description'}</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-6">
-                                            <div className="text-right">
+                                        <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-none pt-4 md:pt-0">
+                                            <div className="text-left md:text-right">
                                                 <p className="text-xl font-bold text-slate-900 dark:text-white">₹{exp.amount.toLocaleString()}</p>
                                                 <span className={`text-[10px] uppercase font-heavy tracking-wider ${exp.category === 'Essential' ? 'text-green-500' : 'text-red-500'}`}>{exp.category}</span>
                                             </div>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); openEditModal(exp); }}
-                                                className="p-2 text-slate-300 hover:text-primary hover:bg-primary/5 rounded-xl transition-all opacity-0 group-hover:opacity-100"
-                                            >
-                                                <Edit3 size={18} />
-                                            </button>
-                                            <button
-                                                onClick={(e) => openDeleteConfirm(e, exp._id)}
-                                                className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); openEditModal(exp); }}
+                                                    className="p-3 bg-slate-50 dark:bg-slate-800 md:bg-transparent md:dark:bg-transparent text-slate-400 md:text-slate-300 hover:text-primary hover:bg-primary/5 rounded-xl transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                                                >
+                                                    <Edit3 size={18} />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => openDeleteConfirm(e, exp._id)}
+                                                    className="p-3 bg-slate-50 dark:bg-slate-800 md:bg-transparent md:dark:bg-transparent text-slate-400 md:text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                                                >
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </motion.div>
                                 ))}
